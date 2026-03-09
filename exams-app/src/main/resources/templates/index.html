@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Calcul de Note Finale</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #2c3e50; }
+        label { display: block; margin-top: 12px; font-weight: bold; }
+        select { width: 100%; padding: 8px; margin-top: 4px; }
+        button { margin-top: 16px; padding: 10px 24px; background: #2980b9; color: white; border: none; cursor: pointer; font-size: 1em; }
+        button:hover { background: #1a6fa0; }
+        .result { margin-top: 24px; padding: 16px; background: #eaf4fb; border-left: 4px solid #2980b9; }
+        .error  { margin-top: 24px; padding: 16px; background: #fdecea; border-left: 4px solid #e74c3c; color: #c0392b; }
+    </style>
+</head>
+<body>
+    <h1>Calcul de la Note Finale</h1>
+    <p>Selectionnez un candidat et une matiere pour calculer sa note finale selon les parametres definis.</p>
+
+    <form method="post" th:action="@{/calculer}">
+        <label for="idCandidat">Candidat :</label>
+        <select id="idCandidat" name="idCandidat" required>
+            <option value="">-- Choisir un candidat --</option>
+            <option th:each="c : ${candidats}"
+                    th:value="${c.idCandidat}"
+                    th:text="${c.nomCandidat}"
+                    th:selected="${c.idCandidat == idCandidatSelected}">
+            </option>
+        </select>
+
+        <label for="idMatiere">Matiere :</label>
+        <select id="idMatiere" name="idMatiere" required>
+            <option value="">-- Choisir une matiere --</option>
+            <option th:each="m : ${matieres}"
+                    th:value="${m.idMatiere}"
+                    th:text="${m.nomMatiere}"
+                    th:selected="${m.idMatiere == idMatiereSelected}">
+            </option>
+        </select>
+
+        <button type="submit">Calculer</button>
+    </form>
+
+    <div class="result" th:if="${noteFinale != null}">
+        <strong>Note finale :</strong>
+        <span th:text="${noteFinale}"></span> / 20
+    </div>
+
+    <div class="error" th:if="${erreur != null}">
+        <strong>Erreur :</strong> <span th:text="${erreur}"></span>
+    </div>
+</body>
+</html>

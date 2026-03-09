@@ -1,83 +1,79 @@
 # Git Workflow — Projet Exams
 
-## Étapes effectuées
-
-### 1. Initialisation du dépôt Git
-```bash
-git init
-```
-Crée un dépôt Git local dans le répertoire du projet (`d:/fianarana/S6/MrNaina/exams`).
-
----
-
-### 2. Création du fichier `.gitignore`
-Fichier créé pour exclure les fichiers compilés et les logs :
-```
-exams-app/target/
-*.class
-*.log
-```
-
----
-
-### 3. Ajout des fichiers de base de données et premier commit (branche `main`)
-```bash
-git add base.sql donnees.sql .gitignore
-git commit -m "initial commit: add database files (base.sql, donnees.sql)"
-```
-- `base.sql` : script de création de la structure de la base de données.
-- `donnees.sql` : script d'insertion des données initiales.
-
-La branche par défaut (`master`) a été renommée en `main` :
-```bash
-git branch -m master main
-```
-
----
-
-### 4. Création de la branche `develop`
-```bash
-git checkout -b develop
-```
-La branche `develop` sert à intégrer les nouvelles fonctionnalités avant de les fusionner dans `main`. C'est la branche de travail principale.
-
----
-
-### 5. Création de la branche `feature/database-setup`
-```bash
-git checkout -b feature/database-setup
-```
-Les branches `feature/*` servent à développer une fonctionnalité spécifique de manière isolée. Une fois la fonctionnalité terminée et testée, elle est fusionnée dans `develop` (via `git merge` ou pull request), puis `develop` est fusionné dans `main` pour une mise en production.
-
----
-
 ## Structure des branches
 
 ```
-main
- └── develop
-      └── feature/database-setup   ← branche active pour modifications futures
+main        ← production stable
+ └── develop ← intégration des features
+      ├── feature/<nom>  ← nouvelle fonctionnalité
+      └── hotfix/<nom>   ← correction urgente (merge aussi dans main)
 ```
 
-## Workflow à suivre pour les modifications futures
+---
 
-1. Depuis `develop`, créer une nouvelle branche feature :
-   ```bash
-   git checkout develop
-   git checkout -b feature/nom-de-la-fonctionnalite
-   ```
-2. Faire les modifications, puis commit :
-   ```bash
-   git add .
-   git commit -m "description des changements"
-   ```
-3. Fusionner dans `develop` une fois terminé :
-   ```bash
-   git checkout develop
-   git merge feature/nom-de-la-fonctionnalite
-   ```
-4. Quand `develop` est stable, fusionner dans `main` :
-   ```bash
-   git checkout main
-   git merge develop
-   ```
+## Étape 1 — Initialisation
+
+```bash
+git init
+git add .
+git commit -m "initial commit"
+git branch -m master main        # renommer master → main
+git checkout -b develop          # créer la branche develop
+```
+
+---
+
+## Étape 2 — Nouvelle fonctionnalité (feature)
+
+```bash
+# 1. Partir de develop
+git checkout develop
+git checkout -b feature/ma-fonctionnalite
+
+# 2. Coder, puis commit
+git add .
+git commit -m "feat: description"
+
+# 3. Fusionner dans develop
+git checkout develop
+git merge feature/ma-fonctionnalite
+git branch -d feature/ma-fonctionnalite
+
+# 4. Quand develop est stable → fusionner dans main
+git checkout main
+git merge develop
+git tag v1.0.0   # optionnel : taguer la version
+```
+
+---
+
+## Étape 3 — Correction urgente (hotfix)
+
+```bash
+# 1. Partir de main
+git checkout main
+git checkout -b hotfix/ma-correction
+
+# 2. Corriger, puis commit
+git add .
+git commit -m "fix: description"
+
+# 3. Fusionner dans main ET dans develop
+git checkout main
+git merge hotfix/ma-correction
+
+git checkout develop
+git merge hotfix/ma-correction
+
+git branch -d hotfix/ma-correction
+```
+
+---
+
+## Commandes utiles
+
+```bash
+git log --oneline --all --graph   # historique visuel
+git branch -v                      # lister les branches
+git status                         # état du dépôt
+```
