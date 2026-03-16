@@ -75,9 +75,13 @@ public class NoteService {
         for (Parametre p : parametres) {
             String op = p.getOperateur().getOperateur();
             BigDecimal seuil = p.getDifference();
-            boolean condition = ">".equals(op)
-                    ? d.compareTo(seuil) > 0
-                    : d.compareTo(seuil) < 0;
+            boolean condition = switch (op) {
+                case ">"  -> d.compareTo(seuil) > 0;
+                case ">=" -> d.compareTo(seuil) >= 0;
+                case "<"  -> d.compareTo(seuil) < 0;
+                case "<=" -> d.compareTo(seuil) <= 0;
+                default   -> throw new IllegalStateException("Operateur inconnu: " + op);
+            };
             if (condition) {
                 parametreApplicable = p;
                 break;

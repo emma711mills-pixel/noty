@@ -13,6 +13,6 @@ public class Operateur {
     @Column(name = "idoperateur")
     private Long idOperateur;
 
-    @Column(name = "operateur", nullable = false, length = 1)
+    @Column(name = "operateur", nullable = false, length = 2)
     private String operateur;
 }
