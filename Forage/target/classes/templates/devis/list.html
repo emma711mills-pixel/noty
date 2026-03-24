@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Devis - Gestion Forage</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f7fa; }
+        .navbar { background: #2d3a4f; color: #fff; padding: 12px 20px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .navbar strong { margin-right: 20px; font-size: 1.2em; }
+        .navbar a { color: #fff; text-decoration: none; padding: 8px 12px; border-radius: 4px; transition: background 0.2s; }
+        .navbar a:hover { background: #40506b; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 16px; }
+        
+        .card { background: #fff; border: 1px solid #dde3ea; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .card h2 { margin-top: 0; color: #2d3a4f; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #dde3ea; }
+        th { background: #34495e; color: #fff; }
+        tr:hover { background: #f8f9fa; }
+        
+        .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em; text-decoration: none; display: inline-block; }
+        .btn-success { background: #27ae60; color: #fff; }
+        .btn-success:hover { background: #219a52; }
+        .btn-danger { background: #e74c3c; color: #fff; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-warning { background: #f39c12; color: #fff; }
+        .btn-warning:hover { background: #d68910; }
+        .btn-sm { padding: 5px 10px; font-size: 0.85em; }
+        
+        .actions { display: flex; gap: 8px; }
+        .empty-state { text-align: center; padding: 40px; color: #7f8c8d; }
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <strong>Gestion Forage</strong>
+        <a href="/clients">Clients</a>
+        <a href="/communes">Communes</a>
+        <a href="/districts">Districts</a>
+        <a href="/regions">Régions</a>
+        <a href="/demandes">Demandes</a>
+        <a href="/devis">Devis</a>
+        <a href="/paiements">Paiements</a>
+        <a href="/statuts">Statuts</a>
+        <a href="/typeDevis">Types Devis</a>
+        <a href="/detailDevis">Détails Devis</a>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>Liste des Devis</h2>
+            
+            <div class="header-actions">
+                <a href="/devis/new" class="btn btn-success">+ Nouveau Devis</a>
+            </div>
+            
+            <table th:if="${not #lists.isEmpty(devis)}">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Demande</th>
+                        <th>Type</th>
+                        <th>Statut</th>
+                        <th>Montant</th>
+                        <th>Paiement</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="d : ${devis}">
+                        <td th:text="${d.id}"></td>
+                        <td th:text="${#temporals.format(d.dateDevis, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td th:text="${d.demande != null ? 'Demande #' + d.demande.id : '-'}"></td>
+                        <td th:text="${d.typeDevis != null ? d.typeDevis.nom : '-'}"></td>
+                        <td th:text="${d.statut != null ? d.statut.libelle : '-'}"></td>
+                        <td th:text="${d.montantTotal != null ? d.montantTotal + ' Ar' : '-'}"></td>
+                        <td th:text="${d.statutPaiement}"></td>
+                        <td class="actions">
+                            <a th:href="@{/devis/edit/{id}(id=${d.id})}" class="btn btn-warning btn-sm">Modifier</a>
+                            <a th:href="@{/devis/delete/{id}(id=${d.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce devis?')">Supprimer</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="empty-state" th:if="${#lists.isEmpty(devis)}">
+                <p>Aucun devis trouvé. Cliquez sur "Nouveau Devis" pour en ajouter un.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

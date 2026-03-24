@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${devis.id != null ? 'Modifier Devis' : 'Nouveau Devis'}">Devis - Gestion Forage</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f7fa; }
+        .navbar { background: #2d3a4f; color: #fff; padding: 12px 20px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .navbar strong { margin-right: 20px; font-size: 1.2em; }
+        .navbar a { color: #fff; text-decoration: none; padding: 8px 12px; border-radius: 4px; transition: background 0.2s; }
+        .navbar a:hover { background: #40506b; }
+        .container { max-width: 800px; margin: 20px auto; padding: 0 16px; }
+        
+        .card { background: #fff; border: 1px solid #dde3ea; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .card h2 { margin-top: 0; color: #2d3a4f; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em; }
+        
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
+        .btn-primary { background: #3498db; color: #fff; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-secondary { background: #95a5a6; color: #fff; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        
+        .actions { display: flex; gap: 10px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <strong>Gestion Forage</strong>
+        <a href="/clients">Clients</a>
+        <a href="/communes">Communes</a>
+        <a href="/districts">Districts</a>
+        <a href="/regions">Régions</a>
+        <a href="/demandes">Demandes</a>
+        <a href="/devis">Devis</a>
+        <a href="/paiements">Paiements</a>
+        <a href="/statuts">Statuts</a>
+        <a href="/typeDevis">Types Devis</a>
+        <a href="/detailDevis">Détails Devis</a>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2 th:text="${devis.id != null ? 'Modifier Devis' : 'Nouveau Devis'}">Devis</h2>
+            
+            <form th:action="${action}" method="post">
+                <input type="hidden" name="id" th:value="${devis.id}" />
+                
+                <div class="form-group">
+                    <label for="idDemande">Demande:</label>
+                    <select id="idDemande" name="idDemande" required>
+                        <option value="">-- Choisir une demande --</option>
+                        <option th:each="d : ${demandes}" 
+                                th:value="${d.id}" 
+                                th:text="${'Demande #' + d.id + ' - ' + (d.client != null ? d.client.nom : '')}"
+                                th:selected="${selectedDemande != null && selectedDemande == d.id}">
+                        </option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="idTypeDevis">Type de Devis:</label>
+                    <select id="idTypeDevis" name="idTypeDevis" required>
+                        <option value="">-- Choisir un type --</option>
+                        <option th:each="t : ${typeDevisList}" 
+                                th:value="${t.id}" 
+                                th:text="${t.nom}"
+                                th:selected="${selectedTypeDevis != null && selectedTypeDevis == t.id}">
+                        </option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="idStatut">Statut:</label>
+                    <select id="idStatut" name="idStatut" required>
+                        <option value="">-- Choisir un statut --</option>
+                        <option th:each="s : ${statuts}" 
+                                th:value="${s.id}" 
+                                th:text="${s.libelle}"
+                                th:selected="${selectedStatut != null && selectedStatut == s.id}">
+                        </option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="montantTotal">Montant Total (Ar):</label>
+                    <input type="number" id="montantTotal" name="montantTotal" th:value="${devis.montantTotal}" step="0.01" />
+                </div>
+                
+                <div class="form-group">
+                    <label for="statutPaiement">Statut Paiement:</label>
+                    <select id="statutPaiement" name="statutPaiement">
+                        <option value="En attente" th:selected="${devis.statutPaiement == 'En attente'}">En attente</option>
+                        <option value="Payé" th:selected="${devis.statutPaiement == 'Payé'}">Payé</option>
+                        <option value="Partiellement payé" th:selected="${devis.statutPaiement == 'Partiellement payé'}">Partiellement payé</option>
+                    </select>
+                </div>
+                
+                <div class="actions">
+                    <button type="submit" class="btn btn-primary" th:text="${devis.id != null ? 'Mettre à jour' : 'Créer'}">Enregistrer</button>
+                    <a href="/devis" class="btn btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
