@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Forage CRUD Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f7fa; }
+        .navbar { background: #2d3a4f; color: #fff; padding: 10px 20px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; }
+        .navbar a { color: #fff; text-decoration: none; margin-right: 10px; padding: 8px 12px; border-radius: 4px; }
+        .navbar a:hover { background: #40506b; }
+        .container { max-width: 1100px; margin: 20px auto; padding: 0 16px; }
+        .box { background: #fff; border: 1px solid #dde3ea; border-radius: 8px; padding: 14px; margin-bottom: 20px; }
+        .box h2 { margin-top: 0; }
+        .actions button { margin-right: 8px; margin-bottom: 8px; }
+        textarea, input[type=text], input[type=number] { width: 100%; border: 1px solid #ccc; padding: 8px; border-radius: 4px; }
+        pre { white-space: pre-wrap; word-wrap: break-word; background: #fafbfc; border: 1px solid #dbe2eb; border-radius: 4px; padding: 8px; max-height: 300px; overflow: auto; }
+        label { font-weight: bold; display: inline-block; margin-bottom: 4px; }
+        .inline { display: flex; gap: 8px; flex-wrap: wrap; }
+        .inline input { width: auto; min-width: 120px; }
+        .status { font-size: 0.9em; color: #2c3e50; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <strong>Forage CRUD</strong>
+        <a href="#clients">Clients</a>
+        <a href="#communes">Communes</a>
+        <a href="#demandes">Demandes</a>
+        <a href="#detailDevis">DetailDevis</a>
+        <a href="#devis">Devis</a>
+        <a href="#districts">Districts</a>
+        <a href="#paiements">Paiements</a>
+        <a href="#regions">Regions</a>
+        <a href="#statuts">Statuts</a>
+        <a href="#typeDevis">TypeDevis</a>
+    </div>
+
+    <div class="container">
+        <h1>Interface CRUD unifiée - Forage</h1>
+        <p>Pour chaque entité, utilisez les boutons pour charger la liste, créer, modifier ou supprimer via l'API.</p>
+
+        <div id="dashboard"></div>
+    </div>
+
+    <script>
+        const entities = [
+            {key: 'clients', title: 'Clients'},
+            {key: 'communes', title: 'Communes'},
+            {key: 'demandes', title: 'Demandes'},
+            {key: 'detailDevis', title: 'DetailDevis'},
+            {key: 'devis', title: 'Devis'},
+            {key: 'districts', title: 'Districts'},
+            {key: 'paiements', title: 'Paiements'},
+            {key: 'regions', title: 'Regions'},
+            {key: 'statuts', title: 'Statuts'},
+            {key: 'typeDevis', title: 'TypeDevis'}
+        ];
+
+        const dashboard = document.getElementById('dashboard');
+
+        function makeSection(entity) {
+            const box = document.createElement('div');
+            box.className = 'box';
+            box.id = entity.key;
+            box.innerHTML = `
+                <h2>${entity.title}</h2>
+                <div class="status" id="${entity.key}-status"></div>
+                <div class="actions">
+                    <button onclick="loadList('${entity.key}')">Charger</button>
+                </div>
+                <h3>Résultats</h3>
+                <pre id="${entity.key}-list">Chargement non effectué</pre>
+                <h3>Créer (JSON)</h3>
+                <textarea id="${entity.key}-create-json" rows="4" placeholder='Ex: {"nom":"X"}'></textarea>
+                <button onclick="createItem('${entity.key}')">Créer</button>
+                <h3>Modifier (id + JSON)</h3>
+                <div class="inline">
+                    <input id="${entity.key}-update-id" type="number" placeholder="id" />
+                    <textarea id="${entity.key}-update-json" rows="3" placeholder='Ex: {"nom":"X2"}'></textarea>
+                </div>
+                <button onclick="updateItem('${entity.key}')">Modifier</button>
+                <h3>Supprimer (id)</h3>
+                <div class="inline"><input id="${entity.key}-delete-id" type="number" placeholder="id" /></div>
+                <button onclick="deleteItem('${entity.key}')">Supprimer</button>
+            `;
+            dashboard.appendChild(box);
+        }
+
+        function setStatus(entity, text, error=false) {
+            const el = document.getElementById(`${entity}-status`);
+            el.textContent = text;
+            el.style.color = error ? '#c0392b' : '#2c3e50';
+        }
+
+        async function loadList(entity) {
+            try {
+                setStatus(entity, 'Chargement...');
+                const r = await fetch(`/api/${entity}`);
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                const json = await r.json();
+                document.getElementById(`${entity}-list`).innerText = JSON.stringify(json, null, 2);
+                setStatus(entity, 'Liste chargée avec succès.');
+            } catch (e) {
+                setStatus(entity, 'Erreur: ' + e.message, true);
+            }
+        }
+
+        async function createItem(entity) {
+            const textarea = document.getElementById(`${entity}-create-json`);
+            try {
+                const body = JSON.parse(textarea.value);
+                const r = await fetch(`/api/${entity}`, {method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)});
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                setStatus(entity, 'Création réussie.');
+                loadList(entity);
+            } catch (e) {
+                setStatus(entity, 'Erreur création: ' + e.message, true);
+            }
+        }
+
+        async function updateItem(entity) {
+            const id = document.getElementById(`${entity}-update-id`).value;
+            const textarea = document.getElementById(`${entity}-update-json`);
+            if (!id) { setStatus(entity, 'ID requis pour la mise à jour', true); return; }
+            try {
+                const body = JSON.parse(textarea.value);
+                const r = await fetch(`/api/${entity}/${id}`, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                setStatus(entity, 'Mise à jour réussie.');
+                loadList(entity);
+            } catch (e) {
+                setStatus(entity, 'Erreur mise à jour: ' + e.message, true);
+            }
+        }
+
+        async function deleteItem(entity) {
+            const id = document.getElementById(`${entity}-delete-id`).value;
+            if (!id) { setStatus(entity, 'ID requis pour suppression', true); return; }
+            try {
+                const r = await fetch(`/api/${entity}/${id}`, {method:'DELETE'});
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                setStatus(entity, 'Suppression réussie.');
+                loadList(entity);
+            } catch (e) {
+                setStatus(entity, 'Erreur suppression: ' + e.message, true);
+            }
+        }
+
+        entities.forEach(makeSection);
+        entities.forEach(e => loadList(e.key));
+    </script>
+</body>
+</html>

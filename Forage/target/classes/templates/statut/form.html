@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${statut.id != null ? 'Modifier Statut' : 'Nouveau Statut'}">Statut - Gestion Forage</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f7fa; }
+        .navbar { background: #2d3a4f; color: #fff; padding: 12px 20px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .navbar strong { margin-right: 20px; font-size: 1.2em; }
+        .navbar a { color: #fff; text-decoration: none; padding: 8px 12px; border-radius: 4px; transition: background 0.2s; }
+        .navbar a:hover { background: #40506b; }
+        .container { max-width: 600px; margin: 20px auto; padding: 0 16px; }
+        
+        .card { background: #fff; border: 1px solid #dde3ea; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .card h2 { margin-top: 0; color: #2d3a4f; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em; }
+        
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
+        .btn-primary { background: #3498db; color: #fff; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-secondary { background: #95a5a6; color: #fff; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        
+        .actions { display: flex; gap: 10px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <strong>Gestion Forage</strong>
+        <a href="/clients">Clients</a>
+        <a href="/communes">Communes</a>
+        <a href="/districts">Districts</a>
+        <a href="/regions">Régions</a>
+        <a href="/demandes">Demandes</a>
+        <a href="/devis">Devis</a>
+        <a href="/paiements">Paiements</a>
+        <a href="/statuts">Statuts</a>
+        <a href="/typeDevis">Types Devis</a>
+        <a href="/detailDevis">Détails Devis</a>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2 th:text="${statut.id != null ? 'Modifier Statut' : 'Nouveau Statut'}">Statut</h2>
+            
+            <form th:action="${action}" method="post" th:object="${statut}">
+                <input type="hidden" th:field="*{id}" />
+                
+                <div class="form-group">
+                    <label for="libelle">Libellé:</label>
+                    <input type="text" id="libelle" th:field="*{libelle}" required />
+                </div>
+                
+                <div class="actions">
+                    <button type="submit" class="btn btn-primary" th:text="${statut.id != null ? 'Mettre à jour' : 'Créer'}">Enregistrer</button>
+                    <a href="/statuts" class="btn btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
