@@ -15,9 +15,6 @@ public class Region {
     @OneToMany(mappedBy = "region")
     private List<District> districts;
 
-    @OneToMany(mappedBy = "region")
-    private List<Demande> demandes;
-
     public Long getId() {
         return id;
     }
@@ -40,13 +37,5 @@ public class Region {
 
     public void setDistricts(List<District> districts) {
         this.districts = districts;
-    }
-
-    public List<Demande> getDemandes() {
-        return demandes;
-    }
-
-    public void setDemandes(List<Demande> demandes) {
-        this.demandes = demandes;
     }
 }

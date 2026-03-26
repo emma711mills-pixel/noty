@@ -51,8 +51,6 @@ CREATE TABLE demande (
 
     id_client INT REFERENCES client(id),
 
-    id_region INT REFERENCES region(id),
-    id_district INT REFERENCES district(id),
     id_commune INT REFERENCES commune(id)
 );
 

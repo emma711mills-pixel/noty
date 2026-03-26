@@ -19,9 +19,6 @@ public class District {
     @OneToMany(mappedBy = "district")
     private List<Commune> communes;
 
-    @OneToMany(mappedBy = "district")
-    private List<Demande> demandes;
-
     public Long getId() {
         return id;
     }
@@ -52,13 +49,5 @@ public class District {
 
     public void setCommunes(List<Commune> communes) {
         this.communes = communes;
-    }
-
-    public List<Demande> getDemandes() {
-        return demandes;
-    }
-
-    public void setDemandes(List<Demande> demandes) {
-        this.demandes = demandes;
     }
 }

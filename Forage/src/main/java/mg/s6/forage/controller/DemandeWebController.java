@@ -3,8 +3,6 @@ package mg.s6.forage.controller;
 import mg.s6.forage.entity.Demande;
 import mg.s6.forage.service.DemandeService;
 import mg.s6.forage.service.ClientService;
-import mg.s6.forage.service.RegionService;
-import mg.s6.forage.service.DistrictService;
 import mg.s6.forage.service.CommuneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,12 +22,6 @@ public class DemandeWebController {
     private ClientService clientService;
     
     @Autowired
-    private RegionService regionService;
-    
-    @Autowired
-    private DistrictService districtService;
-    
-    @Autowired
     private CommuneService communeService;
 
     @GetMapping
@@ -42,8 +34,6 @@ public class DemandeWebController {
     public String createForm(Model model) {
         model.addAttribute("demande", new Demande());
         model.addAttribute("clients", clientService.findAll());
-        model.addAttribute("regions", regionService.findAll());
-        model.addAttribute("districts", districtService.findAll());
         model.addAttribute("communes", communeService.findAll());
         model.addAttribute("action", "/demandes/save");
         return "demande/form";
@@ -52,12 +42,8 @@ public class DemandeWebController {
     @PostMapping("/save")
     public String save(@ModelAttribute Demande demande, 
                        @RequestParam Long idClient,
-                       @RequestParam Long idRegion,
-                       @RequestParam Long idDistrict,
                        @RequestParam Long idCommune) {
         demande.setClient(clientService.findById(idClient).orElse(null));
-        demande.setRegion(regionService.findById(idRegion).orElse(null));
-        demande.setDistrict(districtService.findById(idDistrict).orElse(null));
         demande.setCommune(communeService.findById(idCommune).orElse(null));
         if (demande.getDateDemande() == null) {
             demande.setDateDemande(LocalDateTime.now());
@@ -72,12 +58,8 @@ public class DemandeWebController {
                 .map(demande -> {
                     model.addAttribute("demande", demande);
                     model.addAttribute("clients", clientService.findAll());
-                    model.addAttribute("regions", regionService.findAll());
-                    model.addAttribute("districts", districtService.findAll());
                     model.addAttribute("communes", communeService.findAll());
                     model.addAttribute("selectedClient", demande.getClient() != null ? demande.getClient().getId() : null);
-                    model.addAttribute("selectedRegion", demande.getRegion() != null ? demande.getRegion().getId() : null);
-                    model.addAttribute("selectedDistrict", demande.getDistrict() != null ? demande.getDistrict().getId() : null);
                     model.addAttribute("selectedCommune", demande.getCommune() != null ? demande.getCommune().getId() : null);
                     model.addAttribute("action", "/demandes/update/" + id);
                     return "demande/form";
@@ -88,12 +70,8 @@ public class DemandeWebController {
     @PostMapping("/update/{id}")
     public String update(@PathVariable Long id, @ModelAttribute Demande demande,
                         @RequestParam Long idClient,
-                        @RequestParam Long idRegion,
-                        @RequestParam Long idDistrict,
                         @RequestParam Long idCommune) {
         demande.setClient(clientService.findById(idClient).orElse(null));
-        demande.setRegion(regionService.findById(idRegion).orElse(null));
-        demande.setDistrict(districtService.findById(idDistrict).orElse(null));
         demande.setCommune(communeService.findById(idCommune).orElse(null));
         demandeService.update(id, demande);
         return "redirect:/demandes";

@@ -18,14 +18,6 @@ public class Demande {
     private Client client;
 
     @ManyToOne
-    @JoinColumn(name = "id_region")
-    private Region region;
-
-    @ManyToOne
-    @JoinColumn(name = "id_district")
-    private District district;
-
-    @ManyToOne
     @JoinColumn(name = "id_commune")
     private Commune commune;
 
@@ -54,22 +46,6 @@ public class Demande {
 
     public void setClient(Client client) {
         this.client = client;
-    }
-
-    public Region getRegion() {
-        return region;
-    }
-
-    public void setRegion(Region region) {
-        this.region = region;
-    }
-
-    public District getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(District district) {
-        this.district = district;
     }
 
     public Commune getCommune() {

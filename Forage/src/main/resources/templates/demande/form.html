@@ -63,36 +63,12 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="idRegion">Région:</label>
-                    <select id="idRegion" name="idRegion" required>
-                        <option value="">-- Choisir une région --</option>
-                        <option th:each="r : ${regions}" 
-                                th:value="${r.id}" 
-                                th:text="${r.nom}"
-                                th:selected="${selectedRegion != null && selectedRegion == r.id}">
-                        </option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="idDistrict">District:</label>
-                    <select id="idDistrict" name="idDistrict" required>
-                        <option value="">-- Choisir un district --</option>
-                        <option th:each="d : ${districts}" 
-                                th:value="${d.id}" 
-                                th:text="${d.nom}"
-                                th:selected="${selectedDistrict != null && selectedDistrict == d.id}">
-                        </option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="idCommune">Commune:</label>
+                    <label for="idCommune">Localisation (Commune - District - Région):</label>
                     <select id="idCommune" name="idCommune" required>
                         <option value="">-- Choisir une commune --</option>
                         <option th:each="c : ${communes}" 
                                 th:value="${c.id}" 
-                                th:text="${c.nom}"
+                                th:text="${c.nom} + ' - ' + ${c.district.nom} + ' - ' + ${c.district.region.nom}"
                                 th:selected="${selectedCommune != null && selectedCommune == c.id}">
                         </option>
                     </select>

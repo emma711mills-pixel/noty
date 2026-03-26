@@ -33,8 +33,6 @@ public class DemandeService {
     public Optional<Demande> update(Long id, Demande demandeDetails) {
         return demandeRepository.findById(id).map(demande -> {
             demande.setClient(demandeDetails.getClient());
-            demande.setRegion(demandeDetails.getRegion());
-            demande.setDistrict(demandeDetails.getDistrict());
             demande.setCommune(demandeDetails.getCommune());
             return demandeRepository.save(demande);
         });
