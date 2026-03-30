@@ -4,12 +4,18 @@ import mg.s6.forage.entity.Demande;
 import mg.s6.forage.service.DemandeService;
 import mg.s6.forage.service.ClientService;
 import mg.s6.forage.service.CommuneService;
+import mg.s6.forage.service.DemandeStatutService;
+import mg.s6.forage.service.StatutService;
+import mg.s6.forage.entity.DemandeStatut;
+import mg.s6.forage.entity.Statut;
+import mg.s6.forage.repository.DemandeSummary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/demandes")
@@ -17,6 +23,12 @@ public class DemandeWebController {
 
     @Autowired
     private DemandeService demandeService;
+
+    @Autowired
+    private DemandeStatutService demandeStatutService;
+
+    @Autowired
+    private StatutService statutService;
     
     @Autowired
     private ClientService clientService;
@@ -26,7 +38,7 @@ public class DemandeWebController {
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("demandes", demandeService.findAll());
+        model.addAttribute("demandes", demandeService.findAllWithLatestStatus());
         return "demande/list";
     }
 
@@ -80,6 +92,20 @@ public class DemandeWebController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         demandeService.delete(id);
+        return "redirect:/demandes";
+    }
+
+    @GetMapping("/validate/{id}")
+    public String validate(@PathVariable Long id) {
+        Optional<Demande> demandeOpt = demandeService.findById(id);
+        if (demandeOpt.isPresent()) {
+            Demande demande = demandeOpt.get();
+            Optional<Statut> statutOpt = statutService.findById(2L); // DEMANDE_VALIDEE
+            if (statutOpt.isPresent()) {
+                DemandeStatut demandeStatut = new DemandeStatut(demande, statutOpt.get());
+                demandeStatutService.save(demandeStatut);
+            }
+        }
         return "redirect:/demandes";
     }
 }

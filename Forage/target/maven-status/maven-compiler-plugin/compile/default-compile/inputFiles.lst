@@ -5,6 +5,7 @@ D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\entity\Client.ja
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\controller\TypeDevisController.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\service\StatutService.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\controller\StatutWebController.java
+D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\service\DemandeStatutService.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\entity\DetailDevis.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\controller\DetailDevisWebController.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\service\PaiementService.java
@@ -28,10 +29,12 @@ D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\repository\Statu
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\controller\CommuneWebController.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\controller\DevisController.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\controller\PaiementWebController.java
+D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\repository\DemandeStatutRepository.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\repository\DemandeRepository.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\entity\Commune.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\controller\RegionController.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\controller\PaiementController.java
+D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\entity\DemandeStatut.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\service\CommuneService.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\controller\ClientWebController.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\controller\DetailDevisController.java
@@ -39,6 +42,7 @@ D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\entity\Statut.ja
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\service\DetailDevisService.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\controller\DevisWebController.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\entity\TypeDevis.java
+D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\repository\DemandeSummary.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\repository\RegionRepository.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\repository\CommuneRepository.java
 D:\fianarana\S6\MrNaina\exams\Forage\src\main\java\mg\s6\forage\service\DemandeService.java

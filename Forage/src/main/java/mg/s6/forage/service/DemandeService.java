@@ -2,6 +2,7 @@ package mg.s6.forage.service;
 
 import mg.s6.forage.entity.Demande;
 import mg.s6.forage.repository.DemandeRepository;
+import mg.s6.forage.repository.DemandeSummary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,10 @@ public class DemandeService {
 
     public List<Demande> findAll() {
         return demandeRepository.findAll();
+    }
+
+    public List<DemandeSummary> findAllWithLatestStatus() {
+        return demandeRepository.findAllWithLatestStatus();
     }
 
     public Optional<Demande> findById(Long id) {

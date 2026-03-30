@@ -5,12 +5,14 @@ DROP TABLE IF EXISTS paiement CASCADE;
 DROP TABLE IF EXISTS detail_devis CASCADE;
 DROP TABLE IF EXISTS devis CASCADE;
 DROP TABLE IF EXISTS type_devis CASCADE;
+DROP TABLE IF EXISTS demande_statut CASCADE;
 DROP TABLE IF EXISTS statut CASCADE;
 DROP TABLE IF EXISTS demande CASCADE;
 DROP TABLE IF EXISTS client CASCADE;
 DROP TABLE IF EXISTS commune CASCADE;
 DROP TABLE IF EXISTS district CASCADE;
 DROP TABLE IF EXISTS region CASCADE;
+DROP FUNCTION IF EXISTS insert_demande_statut();
 
 -- =========================
 -- CLIENT
@@ -63,9 +65,32 @@ CREATE TABLE statut (
 );
 
 INSERT INTO statut (libelle) VALUES
+('DEMANDE_EN_COURS'),
+('DEMANDE_VALIDEE'),
 ('FORAGE_COMMENCE'),
 ('FORAGE_SUSPENDU'),
 ('FORAGE_TERMINE');
+
+-- =========================
+-- DEMANDE STATUT
+-- =========================
+CREATE TABLE demande_statut (
+    id SERIAL PRIMARY KEY,
+    id_demande INT REFERENCES demande(id) ON DELETE CASCADE,
+    id_statut INT REFERENCES statut(id),
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE OR REPLACE FUNCTION insert_demande_statut() RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO demande_statut (id_demande, id_statut) VALUES (NEW.id, 1);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_insert_demande_statut
+    AFTER INSERT ON demande
+    FOR EACH ROW EXECUTE FUNCTION insert_demande_statut();
 
 -- =========================
 -- TYPE DEVIS

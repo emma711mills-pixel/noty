@@ -64,8 +64,7 @@
                         <th>Date</th>
                         <th>Client</th>
                         <th>Commune</th>
-                        <th>District</th>
-                        <th>Région</th>
+                        <th>Statut</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -73,12 +72,12 @@
                     <tr th:each="demande : ${demandes}">
                         <td th:text="${demande.id}"></td>
                         <td th:text="${#temporals.format(demande.dateDemande, 'dd/MM/yyyy HH:mm')}"></td>
-                        <td th:text="${demande.client != null ? demande.client.nom : '-'}"></td>
-                        <td th:text="${demande.commune != null ? demande.commune.nom : '-'}"></td>
-                        <td th:text="${demande.commune != null && demande.commune.district != null ? demande.commune.district.nom : '-'}"></td>
-                        <td th:text="${demande.commune != null && demande.commune.district != null && demande.commune.district.region != null ? demande.commune.district.region.nom : '-'}"></td>
+                        <td th:text="${demande.clientNom != null ? demande.clientNom : '-'}"></td>
+                        <td th:text="${demande.communeNom != null ? demande.communeNom : '-'}"></td>
+                        <td th:text="${demande.statutLibelle != null ? demande.statutLibelle : 'DEMANDE_EN_COURS'}"></td>
                         <td class="actions">
                             <a th:href="@{/demandes/edit/{id}(id=${demande.id})}" class="btn btn-warning btn-sm">Modifier</a>
+                            <a th:href="@{/demandes/validate/{id}(id=${demande.id})}" th:if="${demande.statutLibelle != 'DEMANDE_VALIDEE'}" class="btn btn-success btn-sm">Valider</a>
                             <a th:href="@{/demandes/delete/{id}(id=${demande.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette demande?')">Supprimer</a>
                         </td>
                     </tr>
